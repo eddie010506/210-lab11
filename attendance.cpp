@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
-
+#include <limits>
 using namespace std;
 
 // this is a code that checks attendance based on time 
@@ -106,7 +106,7 @@ int main() {
 }
 
 //menu display
-void showMenu() {
+void showmenu() {
     cout << "--- Attendance Tracker Menu ---\n";
     cout << "1. Add Student\n";
     cout << "2. Check-in Student\n";
@@ -135,3 +135,48 @@ void checkInStudent(vector<Student>& roster, int id) {
             AttendanceRecord newRecord;
             // time(nullptr) gets the current calendar time from the system.
             newRecord.checkintime = time(nullptr);
+
+            roster[i].checkin.push_back(newRecord);
+
+            cout << "Checked in " << roster[i].name << ".\n";
+            return; // exit the function once the student is found and checked in.
+        }
+    }
+    // if the loop finishes without finding the student.
+    cout << "Error: Student with ID " << id << " not found.\n";
+
+}
+
+void printRoster(const vector<Student>& roster) {
+    cout << "------------------------------------------\n";
+    cout << "       COURSE ATTENDANCE ROSTER\n";
+    cout << "------------------------------------------\n";
+
+    if (roster.empty()) {
+        cout << "\nThe roster is currently empty.\n";
+    }
+
+    // Loop through each student in the main dynamic array (the roster).
+    for (size_t i = 0; i < roster.size(); ++i) { // Use size_t for loop counter
+        const Student& s = roster[i]; // Use a reference for cleaner code.
+        cout << "\nStudent Name: " << s.name << " (ID: " << s.StudentID << ")\n";
+        cout << "Total Check-ins: " << s.checkin.size() << "\n";
+
+        // Now, loop through the inner dynamic array (their check-in history).
+        if (s.checkin.empty()) {
+            cout << "  -> No check-ins recorded.\n";
+        } else {
+            cout << "  Check-in Times:\n";
+            for (size_t j = 0; j < s.checkin.size(); ++j) { // Use size_t for loop counter
+                // Get the timestamp from the record.
+                time_t timestamp = s.checkin[j].checkintime;
+                // ctime converts the time_t value to a human-readable string.
+                // It includes a newline character, so we use printf to control output.
+                char* timeStr = ctime(&timestamp);
+                printf("    %zu. %s", (j + 1), timeStr); // Use %zu for size_t
+            }
+        }
+    }
+    cout << "------------------------------------------\n";
+}
+
