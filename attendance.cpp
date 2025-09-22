@@ -104,3 +104,34 @@ int main() {
     return 0;
 
 }
+
+//menu display
+void showMenu() {
+    cout << "--- Attendance Tracker Menu ---\n";
+    cout << "1. Add Student\n";
+    cout << "2. Check-in Student\n";
+    cout << "3. Print Roster Report\n";
+    cout << "4. Exit\n";
+    cout << "-----------------------------\n";
+}
+
+void addStudent(vector<Student>& roster, const string& name, int id) {
+    // create a new Student struct instance.
+    Student newStudent;
+    newStudent.name = name;
+    newStudent.StudentID = id;
+
+    // add this new student object to the end of our main roster vector.
+    // vector handles resizing its internal array if necessary.
+    roster.push_back(newStudent);
+    cout << "Successfully added student: " << name << " (ID: " << id << ")\n";
+}
+
+void checkInStudent(vector<Student>& roster, int id) {
+    // We need to find the student in our roster with the matching ID.
+    for (size_t i = 0; i < roster.size(); ++i) { // Use size_t for loop counter
+        if (roster[i].StudentID == id) {
+            // We found the student. Now create a new attendance record.
+            AttendanceRecord newRecord;
+            // time(nullptr) gets the current calendar time from the system.
+            newRecord.checkintime = time(nullptr);
